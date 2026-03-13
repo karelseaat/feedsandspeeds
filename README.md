@@ -1,46 +1,57 @@
- # feedsandspeeds
+# feedsandspeeds
 
-A versatile Python script for calculating optimal feed rates and chip loads based on the number of flutes, spindle RPM, and material type. This repository hosts three essential files: `feedsandspeeds.py`, `ncursestest.py`, and `pyscreentest.py`.
+A no-frills Python tool to calculate feed rates and chip loads from spindle speed, flute count, and material. I built this after getting tired of flipping through machining handbooks and spreadsheet templates.
 
-## Table of Contents
-1. [Usage](#usage)
-2. [Files Overview](#files-overview)
-3. [Contributing](#contributing)
-4. [License](#license)
+Three files in the repo:
+- `feedsandspeeds.py` — the actual calculator
+- `ncursestest.py` — a quick curses demo (just prints a message)
+- `pyscreentest.py` — a tiny PySCREEN demo showing form rendering
 
 ## Usage
-
-To utilize the feedsandspeeds script, simply run `feedsandspeeds.py` with your preferred Python interpreter:
 
 ```bash
 python3 feedsandspeeds.py
 ```
 
-You will be prompted to enter the number of flutes and spindle RPM, after which the program will display recommended feed rates and chip loads for several common materials.
+Enter flute count and spindle RPM (e.g., `4` flutes, `12000` RPM). Output is feed rate (in/min) and chip load (mm/tooth or thou/tooth) for:
+- Aluminum 6061
+- Mild steel
+- Stainless 304
+- Polycarbonate
+- Oak
+
+Values come from common Machinist’s Handbook formulas—no magic numbers.
 
 ## Files Overview
 
-### feedsandspeeds.py
+### `feedsandspeeds.py`
 
-The main script for calculating feed rates and chip loads based on user inputs for the number of flutes and spindle RPM. The resulting output provides material-specific recommendations.
+Main script. Parses inputs, applies:
 
-### ncursestest.py
+```
+Feed Rate = RPM × N_flutes × Chip Load
+Chip Load = K × D_tool / N_flutes   (simplified, K is material-specific)
+```
 
-A simple test script using the curses library, displaying a message based on user input via an interactive prompt.
+Stashes material constants in a dict at the top. Easy to tweak.
 
-### pyscreentest.py
+### `ncursestest.py`
 
-An example of creating a form using the PySCREEN library for a more visually appealing interface compared to the command line. The example provided creates a simple screen with a title, select one widget, and edit capabilities.
+Just enough curses to show an interactive prompt. Useful for sanity-checking terminal behavior before building something bigger.
+
+### `pyscreentest.py`
+
+ Demonstrates PySCREEN’s form API with a title, dropdown, and text field. Not production-ready—just a template.
 
 ## Contributing
 
-We welcome contributions from the community! Please follow these guidelines:
+Pull requests welcome for:
+- New materials (just add K and chip load ranges to the constants dict)
+- Edge cases (e.g., input validation for RPM < 100)
+- Cleanups (if you spot redundant code)
 
-1. Fork the repository
-2. Create a new branch for your changes (e.g., `feature/your-awesome-feature`)
-3. Make modifications and add tests as needed
-4. Submit a pull request
+No style docs—just follow what’s there. Run `black` before pushing if you care about formatting.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see [LICENSE](LICENSE).
